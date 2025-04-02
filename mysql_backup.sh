@@ -11,8 +11,8 @@ cd /var/backups/mysql
 
 ########## バックアップ ##########
 
-# 8日以上前のバックアップを削除
-find . -type f -mtime +8 -exec rm {} \;
+# 丸８日より前のバックアップは削除
+find . -type f -mtime +7 -exec rm {} \;
 
 # 現在の日付と時間をフォーマット
 DATE=$(date +"%Y-%m-%d_%H%M%S")
