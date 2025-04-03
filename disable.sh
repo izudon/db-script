@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# 実効ユーザ root 以外での実行を抑止
+if [ "$(id -un)" != "root" ]; then
+  echo "This script must be run as root user."
+  exit 1
+fi
+
 # 引数チェック
 if [ -z "$1" ]; then
   echo "エラー: 引数を指定してください。"
