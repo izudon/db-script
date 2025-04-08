@@ -12,7 +12,7 @@ name=${dir%-available}
 
 # 条件1 カレントディレクトリが xxx-available
 # 条件2 ../xxx-enabled というディレクトリが存在
-# シンボリックリンクを張る
+# シンボリックリンクを削除
     [ "$dir" != "$name" ] \
     && [ -d ../"$name"-enabled ] \
     && rm -iv ../"$name"-enabled/"$1"
