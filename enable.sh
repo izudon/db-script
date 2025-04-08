@@ -1,40 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
-# 実効ユーザ root 以外での実行を抑止
-if [ "$(id -un)" != "root" ]; then
-  echo "This script must be run as root user."
-  exit 1
-fi
+# root 以外の実効ユーザでの実行を阻止 
+[ "$(id -u)" -ne 0 ] && echo "This script must be run as root user." \
+&& exit 1
 
-# 引数チェック
-if [ -z "$1" ]; then
-  echo "エラー: 引数を指定してください。"
-  exit 1
-fi
+# 引数１つなければ終了
+[ $# -ne 1 ] && { echo "Usage: $0 filename"; exit 1; }
 
-# カレントディレクトリ名取得
-current_dir=$(basename "$PWD")
+dir=$(basename "$PWD")
+name=${dir%-available}
 
-# xxx-available かどうかチェック
-if [[ "$current_dir" != *-available ]]; then
-  echo "エラー: カレントディレクトリが xxx-available ではありません。"
-  exit 1
-fi
-
-# 対応する xxx-enabled ディレクトリが存在するかチェック
-enabled_dir="../${current_dir%-available}-enabled"
-if [ ! -d "$enabled_dir" ]; then
-  echo "エラー: 対応するディレクトリ $enabled_dir が存在しません。"
-  exit 1
-fi
-
-# シンボリックリンクを作成
-target_file="$PWD/$1"
-link_name="$enabled_dir/$1"
-
-if [ ! -e "$target_file" ]; then
-  echo "エラー: 対象ファイル $target_file が存在しません。"
-  exit 1
-fi
-
-ln -siv "$target_file" "$link_name"
+# 条件1 カレントディレクトリが xxx-available
+# 条件2 ../xxx-enabled というディレクトリが存在
+# シンボリックリンクを張る
+    [ "$dir" != "$name" ] \
+    && [ -d ../"$name"-enabled ] \
+    && ln -siv ../"$dir"/"$1" ../"$name"-enabled/
